@@ -1,0 +1,20 @@
+.home-row{
+    display:flex;
+}
+.home {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+.function-card {
+    margin: 15px;
+    height: 250px;
+    min-width: 250px;
+    
+    
+}
+.function-card:hover{
+    cursor: pointer;
+    
+}

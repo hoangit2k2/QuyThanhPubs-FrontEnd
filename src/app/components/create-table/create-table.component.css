@@ -1,0 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital@1&family=Roboto:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geologica:wght@300&family=Merriweather:ital@1&family=Roboto:wght@300&display=swap');
+:host ::ng-deep .p-dataview-emptymessage {
+  display:none;
+}
+.container-order{
+  background-color: #f5f9ff;
+}
+.category--button > button{
+    margin: 10px 10px;
+    align-items: center;
+    justify-content: center;
+}
+.category--button > button:first-child{
+     margin-top: 20px;
+
+}
+.p-menu a.active {
+  color: #ff0000; /* Set the desired text color for the selected item */
+}
+.custom-scroll-container {
+/* Adjust the height as per your requirements */
+padding:0px 10px;
+  overflow: auto; /* Ensure the scrollbar appears only when needed */
+  width: 100%; /* Adjust the width as per your requirements */
+  height: 300px;
+  }
+  
+  .custom-scroll-container::-webkit-scrollbar {
+    width: 8px; /* Customize the width of the scrollbar */
+  }
+  
+  .custom-scroll-container::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Set the background color of the scrollbar track */
+  }
+  
+  .custom-scroll-container::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: #007ad9; /* Set the background color of the scrollbar thumb */
+  }
+  
+  .custom-scroll-container::-webkit-scrollbar-thumb:hover {
+    background-color: #007ad9; /* Set the background color of the scrollbar thumb on hover */
+  }
+
+.products-for-order {
+
+  padding:0px 10px;
+  overflow: auto; /* Ensure the scrollbar appears only when needed */
+  width: 100%; /* Adjust the width as per your requirements */
+  height: 640px; 
+  background-color: #f5f9ff;
+}
+.products-for-order::-webkit-scrollbar {
+  width: 8px; /* Customize the width of the scrollbar */
+}
+
+.cproducts-for-order::-webkit-scrollbar-track {
+  background-color: #f1f1f1; /* Set the background color of the scrollbar track */
+}
+
+.products-for-order::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: #007ad9; /* Set the background color of the scrollbar thumb */
+}
+
+.products-for-order::-webkit-scrollbar-thumb:hover {
+  background-color: #007ad9; /* Set the background color of the scrollbar thumb on hover */
+}
+
+
+:host ::ng-deep .p-inputnumber-input {
+  width: 40px;
+}
+:host ::ng-deep .p-menu {
+  width: 100%;
+  min-height: 640px;
+}
+:host ::ng-deep  .p-menuitem-link{
+ justify-content:  center;
+ font-family: 'Geologica', sans-serif;
+ border-top: 1px solid #000; /* Adjust color and size as needed */
+ border-bottom: 1px solid #000; 
+ margin: 10px 10px;
+ 
+}
+:host ::ng-deep .ng-star-inserted{
+  border:none;
+}
+:host ::ng-deep  .p-submenu-header{
+  text-align: center;
+  font-family: 'Merriweather', serif;
+
+}
+.card-product{
+  background-color: #f0f0f0;
+ 
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  margin: 10px 0px;
+  width: 200px;
+  min-height: 180px;
+}
+:host ::ng-deep .products-for-order .grid{
+
+  background-color: #f5f9ff;
+}
+.card-product{
+  position: relative;
+  cursor: pointer;
+}
+.card-product-title{
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  padding: 2px 5px;
+  color: #fff;
+  background-color: #2aaeb7;
+}
+
+.card-product-button-add{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.5);
+  display: none;
+}
+.card-product:hover .card-product-button-add {
+  display: flex;
+}
+
+:host ::ng-deep .card-product-button-add .p-button {
+  background: red;
+  border: none;
+}
+
+
+:host ::ng-deep .custom-spinner .p-progress-spinner-circle {
+  animation: custom-progress-spinner-dash 1.5s ease-in-out infinite, custom-progress-spinner-color 6s ease-in-out infinite;
+}
+
+@keyframes custom-progress-spinner-color {
+  100%,
+  0% {
+      stroke: #16697A;
+  }
+  40% {
+      stroke: #489FB5;
+  }
+  66% {
+      stroke: #82C0CC;
+  }
+  80%,
+  90% {
+      stroke: #FFA62B;
+  }
+}
+
+@keyframes custom-progress-spinner-dash {
+  0% {
+      stroke-dasharray: 1, 200;
+      stroke-dashoffset: 0;
+  }
+  50% {
+      stroke-dasharray: 89, 200;
+      stroke-dashoffset: -35px;
+  }
+  100% {
+      stroke-dasharray: 89, 200;
+      stroke-dashoffset: -124px;
+  }
+}
+
+:host ::ng-deep .products-for-order .ng-star-inserted{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+:host ::ng-deep .icon-all .p-menuitem-link::before{
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-image: url('./select.png');
+  background-size: cover;
+  margin-right: 5px;
+}
+:host ::ng-deep .icon4 .p-menuitem-link::before{
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-image: url('./diet.png');
+  background-size: cover;
+  margin-right: 5px;
+}
+
+:host ::ng-deep .icon1 .p-menuitem-link::before{
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-image: url('./beer.png');
+  background-size: cover;
+  margin-right: 5px;
+}
+
+:host ::ng-deep .icon6 .p-menuitem-link::before{
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-image: url('./sparkling-water.png');
+  background-size: cover;
+  margin-right: 5px;
+}
+:host ::ng-deep .icon6 .p-menuitem-link::before{
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-image: url('./sparkling-water.png');
+  background-size: cover;
+  margin-right: 5px;
+}
+
+:host ::ng-deep .icon7 .p-menuitem-link::before{
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-image: url('./burger.png');
+  background-size: cover;
+  margin-right: 5px;
+}
+
+:host ::ng-deep .icon9 .p-menuitem-link::before{
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-image: url('./cocktail.png');
+  background-size: cover;
+  margin-right: 5px;
+}

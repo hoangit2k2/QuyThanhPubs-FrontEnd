@@ -1,0 +1,164 @@
+<div class="container-order flex" style="height: 100%;">
+    <div class="order--category" style="flex: 15;">
+        <p-toolbar>
+            <div class="p-toolbar-group-left">
+                <button pButton (click)="back()" icon="pi pi-arrow-left"></button>
+            </div>
+            <div class="p-toolbar-group-right">
+                <button pButton [routerLink]="['/']" icon="pi pi-home"></button>
+            </div>
+        </p-toolbar>
+        <p-menu #menu [model]="items"></p-menu>
+    </div>
+    <div class="order--product" style="flex: 55;">
+        <p-toolbar>
+            <div class="p-toolbar-group-left">
+                <button pButton class="p-button-info" [routerLink]="['/table']">
+                    <i class="pi pi-table mr-1"></i>
+
+                    <span>
+                        Danh sách bàn
+                    </span>
+                </button>
+            </div>
+
+            <div class="p-toolbar-group-right">
+                <button pButton icon="pi pi-search" class="p-button-success">Tìm kiếm</button>
+                <span class="mx-1"></span>
+                <button pButton icon="pi pi-plus-circle" class="p-button-warning">Thêm nhanh</button>
+                <span class="mx-1"></span>
+                <button pButton icon="pi pi-qrcode">Quét mã</button>
+            </div>
+        </p-toolbar>
+
+
+
+        <div class="products-for-order">
+            <div *ngIf="isLoading" class=" mt-3 flex justify-content-center align-items-center">
+                <p-progressSpinner></p-progressSpinner>
+            </div>
+            <div *ngIf="!isLoading && isNull" class=" mt-5 flex justify-content-center align-items-center">
+                <img src="assets/empty-folder.png" style="width: 100px; height: 100px;" alt="">
+            </div>
+
+            <p-dataView #dv emptyMessage="" [value]="products" [layout]="layout" *ngIf="!isLoading && !isNull">
+                <ng-template let-product pTemplate="gridItem">
+                    <div class="col-12 sm:col-6 lg:col-12 xl:col-4 ">
+                        <div class="card-product">
+                            <div class=" border-1 surface-border surface-card border-round">
+                                <div class="flex flex-column align-items-center gap-4 py-5">
+                                    <img style="height: 83px; width: 148px;" class="w-9 shadow-2 border-round"
+                                        [src]="product.image" />
+                                    <div
+                                        style="font-family: 'Roboto', sans-serif; overflow-wrap: break-word; text-align: center;">
+                                        {{product.name}}
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="card-product-title border-round">{{product.price|currency: 'VND'}}</span>
+                            <div class="card-product-button-add">
+                                <p-button icon="pi pi-plus" styleClass="p-button-rounded p-button-secondary"
+                                    (onClick)="addProductCart(product)"></p-button>
+                            </div>
+                        </div>
+
+                    </div>
+                </ng-template>
+            </p-dataView>
+        </div>
+
+
+    </div>
+    <div class="order--order" style="flex: 30;">
+        <p-panel header="Thông tin bàn" [toggleable]="true">
+
+            <div class="grid p-fluid">
+                <div class="col-12">
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
+                        <input (change)=" saveOrderTableToStore()" [(ngModel)]="orderedTable.name" type="text"
+                            pInputText placeholder="Tên người đặt bàn">
+                    </div>
+                </div>
+
+                <div class="col-12 ">
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon">
+                            <i class="pi pi-phone"></i>
+                        </span>
+                        <input (change)=" saveOrderTableToStore()" [(ngModel)]="orderedTable.phone" type="text"
+                            pInputText placeholder="Số điện thoại (nếu có)">
+
+                    </div>
+                </div>
+
+            </div>
+            <p-divider align="center" class="my-1">
+                <span>Món ăn</span>
+            </p-divider>
+            <div class="ordered-items">
+                <div class="custom-scroll-container">
+                    <p-dataView #dv [value]="orderedProducts" *ngIf="!(orderedProducts?.length === 0)">
+                        <ng-template let-orderedProduct pTemplate="listItem">
+                            <div class="col-12 py-2">
+                                <div>
+                                    <div class="flex justify-content-between align-items-center  ">
+                                        <div style="flex:80"
+                                            class="flex flex-column align-items-center sm:align-items-start">
+                                            <h4 style="font-weight: 500; margin: 5px 0px ;">{{
+                                                orderedProduct.product.name}}</h4>
+                                            <div class="flex align-items-center gap-3">
+                                                <span class="flex align-items-center gap-2">
+                                                    <span class="">{{orderedProduct.product.price | currency:
+                                                        'VND'}}</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="input-container" style="flex:20">
+                                            <p-inputNumber (onInput)="changePrice($event)"
+                                                [(ngModel)]=" orderedProduct.quantity" [showButtons]="true"
+                                                inputId="minmax-buttons" [min]="1" [max]="20">
+                                            </p-inputNumber>
+                                        </div>
+
+
+                                        <div style="flex:20" class="flex align-items-center justify-content-center">
+
+                                            <button pButton icon="pi pi-trash" class=" p-button-danger p-button-rounded"
+                                                (click)="deleteOrderedProduct(orderedProduct.product)"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+
+                    </p-dataView>
+
+                </div>
+                <div class="temp-price flex justify-content-between align-items-center">
+                    <h4 style="font-family: 'Merriweather', serif;">Tạm tính: </h4>
+                    <p style=" font-family: 'Geologica', sans-serif;">{{tempTotal | currency: 'VND' : true}}</p>
+                </div>
+                <div class="temp-price flex justify-content-between align-items-center">
+                    <textarea (change)=" saveOrderTableToStore()" [(ngModel)]="orderedTable.note" rows="2" cols="30"
+                        pInputTextarea style="width: 100%;" placeholder="Ghi chú"></textarea>
+                </div>
+                <p-divider align="center">
+                </p-divider>
+                <div class="flex justify-content-between align-items-center">
+                    <button [disabled]="orderedProducts.length === 0 || orderedTable.name === ''" pButton type="button"
+                        class="p-button-primary" (click)="saveTable()">
+                        <i *ngIf="isSaving" class="pi pi-spin pi-spinner mr-1"></i>
+                        <i *ngIf="!isSaving" class="pi pi-save mr-1"></i>
+                        Lưu bàn</button>
+                    <button pButton type="button" icon="pi pi-times" class="p-button-danger" (click)="cancelTable()">Hủy
+                        bàn</button>
+
+                </div>
+            </div>
+
+        </p-panel>
+
+    </div>
+</div>
+<p-toast></p-toast>
