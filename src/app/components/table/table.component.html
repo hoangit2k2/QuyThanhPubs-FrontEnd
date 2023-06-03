@@ -1,0 +1,49 @@
+<div class="container-tables">
+
+    <p-toolbar>
+        <div class="p-toolbar-group-start">
+            <button pButton [routerLink]="['/']" icon="pi pi-home" styleClass="p-button-success"></button>
+        </div>
+        <div class="p-toolbar-group-end flex">
+            <div class="p-toolbar-group-left">
+                <button pButton [routerLink]="['/create-table']" icon="pi pi-plus">Tạo bàn</button>
+            </div>
+            <div class="mx-1"></div>
+            <span class="p-input-icon-right mb-2 md:mb-0">
+                <i class="pi pi-search"></i>
+                <input type="search" pInputText placeholder="Tìm kiếm theo tên">
+                <!-- (input)="dv.filter($event.target?.value)" -->
+            </span>
+        </div>
+    </p-toolbar>
+
+    <div class="tables-card">
+        <h3 class="container-tables-title " style="text-align: center;">DANH SÁCH BÀN</h3>
+        <div *ngIf="isLoading" class=" mt-3 flex justify-content-center align-items-center">
+            <p-progressSpinner></p-progressSpinner>
+        </div>
+        <div class="tables-in-serving" *ngIf="!isLoading">
+            <p-dataView #dv [value]="tables">
+                <ng-template let-table pTemplate="listItem">
+                    <div class="col-12 sm:col-6 lg:col-12 xl:col-3 p-2" style="cursor: pointer">
+                        <div class="py-4 border-1 surface-border surface-card border-round">
+                            <div class="flex flex-column align-items-center gap-3 ">
+                                <img class="w-9 shadow-2 border-round" src="assets/bannertable.jpg" />
+                                <div class="flex align-items-center justify-content-center">
+                                    <img style="width: 23px; height: 23px;" src="assets/table.png" alt="">
+                                    <div class="mx-1"></div>
+                                    <div class="text-xl font-bold table-name" style="overflow-wrap: break-word;">
+                                        {{ table.name }}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </ng-template>
+            </p-dataView>
+        </div>
+
+    </div>
+</div>
