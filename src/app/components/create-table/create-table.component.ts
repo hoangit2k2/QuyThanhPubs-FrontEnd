@@ -38,6 +38,7 @@ export class CreateTableComponent implements OnInit {
     orderedProducts:[],
     note: ''
   };
+  menuCheckout!: MenuItem[];
   constructor(private primengConfig: PrimeNGConfig, 
     private productService: ProductService, 
     private categoryService: CategoryService,
@@ -47,6 +48,20 @@ export class CreateTableComponent implements OnInit {
     private location: Location) {
    }
   ngOnInit(): void {
+    this.menuCheckout = [{
+      label: 'Update',
+      icon: 'pi pi-refresh',
+      command: () => {
+          console.log()
+      }
+  },
+  {
+      label: 'Delete',
+      icon: 'pi pi-times',
+      command: () => {
+        console.log()
+      }
+  }]
     var data= this.storeService.getCart("orderedTable");
     console.log(data);
    if (data){
