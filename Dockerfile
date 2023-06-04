@@ -1,17 +1,10 @@
-FROM node:16.16.0
-
+FROM node:16-alpine AS build
 WORKDIR /app
 
-COPY package*.json ./
-
 COPY . .
-
 RUN npm install
-
-# COPY .env.production .env
-
 RUN npm run build
-
-EXPOSE 4200
-
-CMD ["npm", "start"]
+# Serve Application using Nginx Server
+FROM nginx:alpine
+COPY --from=build /app/dist/quythanhpubs-frontend/ /usr/share/nginx/html
+EXPOSE 80
