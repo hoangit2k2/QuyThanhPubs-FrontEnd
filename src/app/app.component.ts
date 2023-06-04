@@ -8,7 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class AppComponent  {
   title = 'quythanhpubs-frontend';
-  private idleTimeout = 1 * 60 * 1000; // 5 minutes in milliseconds
+  private idleTimeout = 5 * 60 * 1000; // 5 minutes in milliseconds
   private timer: any;
   visible: boolean = false
   constructor() {
