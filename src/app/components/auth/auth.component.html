@@ -1,0 +1,50 @@
+<div class="container">
+    <p-card>
+
+        <div class="card-form-login">
+            <div class="card-form-img">
+                <img style="width: 350px; height: 300px;"
+                    src="https://static.vecteezy.com/system/resources/previews/019/775/321/original/restaurant-interior-cartoon-vector.jpg"
+                    alt="">
+            </div>
+            <div class="card-form-input">
+                <h3 class="card-form-input-title">Đăng nhập</h3>
+                <div class="my-5"></div>
+                <form [formGroup]="loginForm">
+                    <span class="p-float-label">
+                        <input formControlName="username" pInputText id="username" />
+                        <label htmlFor="username">Tên tài khoản</label>
+                    </span>
+                    <div
+                        *ngIf="loginForm.get('username')!.invalid && (loginForm.get('username')!.dirty || loginForm.get('username')!.touched)">
+                        <div *ngIf="loginForm.get('username')!.getError('required')"
+                            [ngStyle]="{color: 'var(--red-400)'}"
+                            style="font-size: 14px; margin-top: 2px; margin-left: 2px;">Vui lòng nhập tên tài khoản!
+                        </div>
+                    </div>
+                    <div class="my-5"></div>
+                    <span class="p-float-label">
+                        <p-password formControlName="password" [feedback]="false" [toggleMask]="true"></p-password>
+                        <label for="password">Mật khẩu</label>
+                    </span>
+                    <div
+                        *ngIf="loginForm.get('password')!.invalid && (loginForm.get('password')!.dirty || loginForm.get('password')!.touched)">
+                        <div *ngIf="loginForm.get('password')!.getError('required')"
+                            [ngStyle]="{color: 'var(--red-400)'}"
+                            style="font-size: 14px; margin-top: 2px; margin-left: 2px;">Vui lòng nhập mật khẩu!</div>
+                    </div>
+                    <div class="my-4"></div>
+                    <div style="text-align: center;">
+                        <p-button (onClick)="onLogin()" [disabled]="!loginForm.valid" styleClass="p-button-secondary">
+                            <i *ngIf="isLoading" class="pi pi-spin pi-spinner mr-1"></i>
+                            Đăng nhập</p-button>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </p-card>
+
+</div>
+<p-toast></p-toast>

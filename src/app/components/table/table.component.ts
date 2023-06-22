@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { PrimeNGConfig, SelectItem } from 'primeng/api';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MessageService, PrimeNGConfig, SelectItem } from 'primeng/api';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Product } from 'src/app/models/product.model';
 import { Table } from 'src/app/models/table.model';
 import { TableService } from 'src/app/services/table.service';
+
 
 @Component({
   selector: 'app-table',
@@ -15,7 +18,7 @@ export class TableComponent implements OnInit {
    sortField!: string;
    sortOrder!: number;
    sortKey!: string
-  constructor(private primengConfig: PrimeNGConfig, private tableService:TableService) { }
+  constructor(private primengConfig: PrimeNGConfig, private tableService:TableService, public dialogService: DialogService, public messageService: MessageService) { }
 
   ngOnInit(): void {
     this.isLoading = true;
@@ -23,10 +26,6 @@ export class TableComponent implements OnInit {
       this.tables = data;
       this.isLoading = false;
     })
-    this.sortOptions = [
-      {label: 'Price High to Low', value: '!price'},
-      {label: 'Price Low to High', value: 'price'}
-  ];
 
   this.primengConfig.ripple = true;
   }

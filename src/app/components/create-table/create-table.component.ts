@@ -11,6 +11,7 @@ import { ProductService } from 'src/app/services/product.service';
 import { StoreService } from 'src/app/services/store.service';
 import { TableService } from 'src/app/services/table.service';
 import { Location } from '@angular/common';
+import { OrderedTableOfUser } from 'src/app/models/table-ordered-user.model';
 @Component({
   selector: 'app-create-table',
   templateUrl: './create-table.component.html',
@@ -39,6 +40,7 @@ export class CreateTableComponent implements OnInit {
     note: ''
   };
   menuCheckout!: MenuItem[];
+  orderedTableOfUser!: OrderedTableOfUser;
   constructor(private primengConfig: PrimeNGConfig, 
     private productService: ProductService, 
     private categoryService: CategoryService,
@@ -190,13 +192,9 @@ export class CreateTableComponent implements OnInit {
     console.log(this.orderedTable)
     this.isSaving = true
     this.tableService.createTable(this.orderedTable).subscribe(data => {
+      this.orderedTableOfUser = data;
+      console.log(this.orderedTableOfUser);
       this.storeService.removeCart("orderedTable")
-      this.orderedTable = {
-        name: '',
-        phone:'',
-        orderedProducts:[],
-        note: ''
-      };
       this.orderedProducts = this.orderedTable.orderedProducts;
       this.alertService.showAlert('success', 'Thông báo', 'Tạo bàn cho khách hàng thành công!')
       this.isSaving = false;
@@ -209,5 +207,44 @@ export class CreateTableComponent implements OnInit {
   }
   back(){
     this.location.back();
+  }
+  typingTimeout : any;
+  search($event: any){
+    clearTimeout(this.typingTimeout);
+
+    // Lấy giá trị đã nhập từ event.target.value
+    const inputValue = $event.target.value;
+  
+    // Tạo timeout mới
+    this.typingTimeout = setTimeout(() => {
+      
+      this.isLoading =true
+      this.isNull = true;
+      if (inputValue === '') {
+        this.productService.getAllProducts().subscribe(data => {
+          this.products = data
+          this.isLoading= false
+          if(this.products.length ===0){
+            this.isNull = true;
+          }
+          else{
+            this.isNull = false;
+          }
+        });
+      }
+      else{
+        this.productService.getProductByLikeName(inputValue).subscribe(data => {
+          this.products = data
+          this.isLoading= false
+          if(this.products.length ===0){
+            this.isNull = true;
+          }
+          else{
+            this.isNull = false;
+          }
+        });
+      }
+
+    }, 500);
   }
 }

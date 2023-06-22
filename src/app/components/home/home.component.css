@@ -8,9 +8,11 @@
     justify-content: center;
 }
 .function-card {
-    margin: 15px;
-    height: 250px;
+    margin: 30px 15px;
+    height: 164px;
     min-width: 250px;
+
+  
     
     
 }
