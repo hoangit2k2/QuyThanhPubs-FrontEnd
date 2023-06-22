@@ -25,7 +25,8 @@
         <div class="tables-in-serving" *ngIf="!isLoading">
             <p-dataView #dv [value]="tables">
                 <ng-template let-table pTemplate="listItem">
-                    <div class="col-12 sm:col-6 lg:col-12 xl:col-3 p-2" style="cursor: pointer">
+                    <div class="col-12 sm:col-6 lg:col-12 xl:col-3 p-2" style="cursor: pointer"
+                        [routerLink]="['/table/', table.id]">
                         <div class="py-4 border-1 surface-border surface-card border-round">
                             <div class="flex flex-column align-items-center gap-3 ">
                                 <img class="w-9 shadow-2 border-round" src="assets/bannertable.jpg" />

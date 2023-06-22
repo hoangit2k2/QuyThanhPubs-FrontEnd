@@ -72,9 +72,9 @@
 
     </div>
     <div class="order--order" style="flex: 30;">
-        <p-panel header="Thông tin bàn" [toggleable]="true">
+        <p-panel header="Cập nhật thông tin bàn" [toggleable]="true">
             <ng-template pTemplate="icons">
-                <button (click)="cancelTable()" pButton class="p-panel-header-icon p-link">
+                <button pButton class="p-panel-header-icon p-link">
                     <span class="pi pi-sync"></span>
                 </button>
             </ng-template>
@@ -82,8 +82,8 @@
                 <div class="col-12">
                     <div class="p-inputgroup">
                         <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
-                        <input (change)=" saveOrderTableToStore()" [(ngModel)]="orderedTable.name" type="text"
-                            pInputText placeholder="Tên người đặt bàn">
+                        <input [(ngModel)]="orderedTableOfUser.name" type="text" pInputText
+                            placeholder="Tên người đặt bàn">
                     </div>
                 </div>
 
@@ -92,8 +92,8 @@
                         <span class="p-inputgroup-addon">
                             <i class="pi pi-phone"></i>
                         </span>
-                        <input (change)=" saveOrderTableToStore()" [(ngModel)]="orderedTable.phone" type="text"
-                            pInputText placeholder="Số điện thoại (nếu có)">
+                        <input [(ngModel)]="orderedTableOfUser.phone" type="text" pInputText
+                            placeholder="Số điện thoại (nếu có)">
 
                     </div>
                 </div>
@@ -104,7 +104,8 @@
             </p-divider>
             <div class="ordered-items">
                 <div class="custom-scroll-container">
-                    <p-dataView #dv [value]="orderedProducts" *ngIf="!(orderedProducts?.length === 0)">
+                    <p-dataView #dv [value]="orderedTableOfUser.tableProducts"
+                        *ngIf="!(orderedTableOfUser.tableProducts.length == 0)">
                         <ng-template let-orderedProduct pTemplate="listItem">
                             <div class="col-12 py-2">
                                 <div>
@@ -112,16 +113,28 @@
                                         <div style="flex:80"
                                             class="flex flex-column align-items-center sm:align-items-start">
                                             <h4 style="font-weight: 500; margin: 5px 0px ;">{{
-                                                orderedProduct.product.name}}</h4>
+                                                orderedProduct.product.name}}
+                                                <p-avatar *ngIf="orderedProduct.status === 'delivered'"
+                                                    icon="pi pi-check" styleClass="mx-1 green-500"
+                                                    [style]="{'background-color': 'green', 'color': '#ffffff'}"
+                                                    shape="circle"></p-avatar>
+
+                                            </h4>
                                             <div class="flex align-items-center gap-3">
                                                 <span class="flex align-items-center gap-2">
                                                     <span class="">{{orderedProduct.product.price | currency:
                                                         'VND'}}</span>
                                                 </span>
+
+
+
                                             </div>
+
                                         </div>
+
                                         <div class="input-container" style="flex:20">
-                                            <p-inputNumber (onInput)="changePrice($event)"
+                                            <p-inputNumber [disabled]="orderedProduct.status === 'delivered'"
+                                                (onInput)="changePrice(orderedProduct.product, $event)"
                                                 [(ngModel)]=" orderedProduct.quantity" [showButtons]="true"
                                                 inputId="minmax-buttons" [min]="1" [max]="20">
                                             </p-inputNumber>
@@ -130,8 +143,16 @@
 
                                         <div style="flex:20" class="flex align-items-center justify-content-center">
 
-                                            <button pButton icon="pi pi-trash" class=" p-button-danger p-button-rounded"
-                                                (click)="deleteOrderedProduct(orderedProduct.product)"></button>
+                                            <div class="mx-1"></div>
+                                            <button pButton [disabled]="orderedProduct.status === 'delivered'"
+                                                icon="pi pi-trash"
+                                                class="p-button-rounded p-button-danger p-button-text"
+                                                (click)="deleteOrderedProduct(orderedProduct)"></button>
+                                            <div class="mx-1"></div>
+                                            <button pButton [disabled]="orderedProduct.status === 'delivered'"
+                                                icon="pi pi-check"
+                                                class="p-button-rounded p-button-primary p-button-text"
+                                                (click)="changeStatusOfProduct(orderedProduct)"></button>
                                         </div>
                                     </div>
                                 </div>
@@ -146,21 +167,23 @@
                     <p style=" font-family: 'Geologica', sans-serif;">{{tempTotal | currency: 'VND' : true}}</p>
                 </div>
                 <div class="temp-price flex justify-content-between align-items-center">
-                    <textarea (change)=" saveOrderTableToStore()" [(ngModel)]="orderedTable.note" rows="2" cols="30"
-                        pInputTextarea style="width: 100%;" placeholder="Ghi chú"></textarea>
+                    <textarea [(ngModel)]="orderedTableOfUser.note" rows="2" cols="30" pInputTextarea
+                        style="width: 100%;" placeholder="Ghi chú"></textarea>
                 </div>
                 <p-divider align="center">
                 </p-divider>
                 <div class="flex justify-content-between align-items-center">
-                    <button [disabled]="orderedProducts.length === 0 || orderedTable.name === ''" pButton type="button"
-                        class="p-button-primary" (click)="saveTable()">
+                    <button [disabled]="orderedTableOfUser.tableProducts.length === 0 || orderedTableOfUser.name === ''"
+                        pButton type="button" class="p-button-primary" (click)="saveTable()">
                         <i *ngIf="isSaving" class="pi pi-spin pi-spinner mr-1"></i>
                         <i *ngIf="!isSaving" class="pi pi-save mr-1"></i>
                         Lưu bàn</button>
-                    <button [disabled]="orderedProducts.length === 0 && orderedTable.name === ''" pButton type="button"
-                        icon="pi pi-times" class="p-button-danger" (click)="cancelTable()">Hủy
-                        bàn</button>
-
+                    <button [disabled]="orderedProducts.length === 0 ||  orderedTableOfUser.name === ''" pButton
+                        type="button" icon="pi pi-check" class="p-button-success">Thanh
+                        toán</button>
+                    <!-- <button *ngIf="!getStateTableIsUsing()" pButton type="button" icon="pi pi-times"
+                        class="p-button-danger">Hủy
+                        bàn</button> -->
 
 
                 </div>
@@ -171,3 +194,4 @@
     </div>
 </div>
 <p-toast></p-toast>
+<p-confirmPopup></p-confirmPopup>

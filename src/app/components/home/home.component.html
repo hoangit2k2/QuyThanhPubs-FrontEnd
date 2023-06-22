@@ -1,33 +1,37 @@
 <div class="home">
     <div class="home--container">
-        <div class="home-row">
-            <p-card class="function-card" [routerLink]="['/create-table']">
-                <div class="m-0" style="text-align: center;">
-                    <i class="pi pi-cart-plus" style="font-size: 50px;"></i>
-                    <h1>Đặt Món</h1>
-                </div>
-            </p-card>
-            <p-card class="function-card" [routerLink]="['/manage']">
-                <div class="m-0" style="text-align: center;">
-                    <i class="pi pi-cog" style="font-size: 50px;"></i>
-                    <h1>Quản lý</h1>
-                </div>
-            </p-card>
+        <div class="home-cards ">
+            <div class="home-cards-top flex">
+                <p-card class="function-card " [routerLink]="['/table']">
+                    <div class="m-0" style="text-align: center;">
+                        <i class="pi pi-cart-plus" style="font-size: 50px;"></i>
+                        <h1>Đặt Món</h1>
+                    </div>
+                </p-card>
+                <p-card class="function-card" [routerLink]="['/manage']">
+                    <div class="m-0" style="text-align: center;">
+                        <i class="pi pi-cog" style="font-size: 50px;"></i>
+                        <h1>Quản lý</h1>
+                    </div>
+                </p-card>
+            </div>
+            <div class="home-cards-top flex">
+                <p-card class="function-card " [routerLink]="['/statistic']">
+                    <div class="m-0" style="text-align: center;">
+                        <i class="pi pi-chart-bar" style="font-size: 50px;"></i>
+                        <h1>Doanh thu</h1>
+                    </div>
+                </p-card>
+                <p-card class="function-card" (click)="logout()">
+                    <div class="m-0" style="text-align: center;">
+                        <i class="pi pi-sign-out" style="font-size: 50px; "></i>
+                        <h1>Đăng xuất</h1>
+                    </div>
+                </p-card>
+            </div>
+
+
         </div>
 
-        <div class="home-row">
-            <p-card class="function-card" [routerLink]="['/statistic']">
-                <div class="m-0" style="text-align: center;">
-                    <i class="pi pi-chart-bar" style="font-size: 50px;"></i>
-                    <h1>Doanh thu</h1>
-                </div>
-            </p-card>
-            <p-card class="function-card" [routerLink]="['/logout']">
-                <div class="m-0" style="text-align: center;">
-                    <i class="pi pi-sign-out" style="font-size: 50px; "></i>
-                    <h1>Đăng xuất</h1>
-                </div>
-            </p-card>
-        </div>
     </div>
 </div>

@@ -16,4 +16,8 @@ export class ProductService {
   getAllProducts(){
     return this.http.get<Product[]>(environment.apiBase+ `admin/product`);
   }
+  getProductByLikeName(name:string){
+    return this.http.get<Product[]>(environment.apiBase+ `admin/product/name?name=${name}`);
+
+  }
 }

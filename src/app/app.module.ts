@@ -23,18 +23,35 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import {DataViewModule} from 'primeng/dataview';
 import {RatingModule} from 'primeng/rating';
 import {DropdownModule} from 'primeng/dropdown';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {SplitterModule} from 'primeng/splitter';
 import { CreateTableComponent } from './components/create-table/create-table.component';
 import {ChartModule} from 'primeng/chart';
 import { FieldsetModule } from 'primeng/fieldset';
 import {InputNumberModule} from 'primeng/inputnumber';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { BadgeModule } from 'primeng/badge';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {ToastModule} from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { TableModule } from 'primeng/table';
+import { ChipModule } from 'primeng/chip';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { ProductService } from './services/product.service';
+import { TagModule } from 'primeng/tag';
+import { EditTableComponent } from './components/edit-table/edit-table.component';
+import { AvatarModule } from 'primeng/avatar';
+import { AuthInterceptor } from './auth.interceptor';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { AuthComponent } from './components/auth/auth.component';
+import { MyDataResolver } from './utils/resolve.util';
+import { JwtModule } from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+export function tokenGetter() {
+  return localStorage.getItem('access_token');
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,10 +59,15 @@ import { MessageService } from 'primeng/api';
     ManagerComponent,
     StatisticComponent,
     TableComponent,
-    CreateTableComponent
+    CreateTableComponent,
+    EditTableComponent,
+    NotFoundComponent,
+    AuthComponent
   ],
   imports: [
     BrowserModule,
+    ChipModule,
+    TagModule,
     AppRoutingModule,
     ButtonModule,
     CardModule,
@@ -73,9 +95,26 @@ import { MessageService } from 'primeng/api';
     InputTextareaModule,
     BadgeModule,
     ProgressSpinnerModule,
-    ToastModule
+    ToastModule,
+    TableModule,
+    DynamicDialogModule,
+    ReactiveFormsModule,
+    AvatarModule,
+    ConfirmPopupModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: [environment.apiBase],
+        
+      },
+    })
+    
   ],
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService, DialogService,MyDataResolver, { 
+    provide: HTTP_INTERCEPTORS,
+    useClass:AuthInterceptor,
+    multi:true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
