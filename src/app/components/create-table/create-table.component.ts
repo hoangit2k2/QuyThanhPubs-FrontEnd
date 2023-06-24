@@ -12,6 +12,7 @@ import { StoreService } from 'src/app/services/store.service';
 import { TableService } from 'src/app/services/table.service';
 import { Location } from '@angular/common';
 import { OrderedTableOfUser } from 'src/app/models/table-ordered-user.model';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-create-table',
   templateUrl: './create-table.component.html',
@@ -47,7 +48,8 @@ export class CreateTableComponent implements OnInit {
     private storeService: StoreService,
     private tableService: TableService,
     private alertService: AlertService,
-    private location: Location) {
+    private location: Location,
+    private router : Router) {
    }
   ngOnInit(): void {
     this.menuCheckout = [{
@@ -192,13 +194,10 @@ export class CreateTableComponent implements OnInit {
     console.log(this.orderedTable)
     this.isSaving = true
     this.tableService.createTable(this.orderedTable).subscribe(data => {
-      this.orderedTableOfUser = data;
-      console.log(this.orderedTableOfUser);
-      this.storeService.removeCart("orderedTable")
-      this.orderedProducts = this.orderedTable.orderedProducts;
       this.alertService.showAlert('success', 'Thông báo', 'Tạo bàn cho khách hàng thành công!')
-      this.isSaving = false;
-      this.getTempTotal();
+      setTimeout(() => {
+        this.router.navigate(['table',data.id])
+      },1000)
     }, 
     error =>{
       this.alertService.showAlert('error', 'Thông báo', error)

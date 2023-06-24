@@ -170,10 +170,7 @@
                     <h4 style="font-family: 'Merriweather', serif;">Tạm tính: </h4>
                     <p style=" font-family: 'Geologica', sans-serif;">{{tempTotal | currency: 'VND' : true}}</p>
                 </div>
-                <div class="temp-price flex justify-content-between align-items-center">
-                    <textarea [(ngModel)]="orderedTableOfUser.note" rows="2" cols="30" pInputTextarea
-                        style="width: 100%;" placeholder="Ghi chú"></textarea>
-                </div>
+
                 <p-divider align="center">
                 </p-divider>
                 <div class="flex justify-content-between align-items-center">
@@ -184,9 +181,10 @@
                         Lưu bàn</button>
                     <button
                         [disabled]="this.checkDelivered() || orderedTableOfUser.tableProducts.length === 0 || orderedTableOfUser.name === ''"
-                        pButton type="button" icon="pi pi-check" class="p-button-success"
-                        (click)="this.checkOut()">Thanh
-                        toán</button>
+                        pButton type="button" class="p-button-success" (click)="this.checkOut()">
+                        <i *ngIf="isSavingCheckout" class="pi pi-spin pi-spinner mr-1"></i>
+                        <i *ngIf="!isSavingCheckout" class="pi pi-check mr-1"></i>
+                        Thanh toán</button>
                     <!-- <button *ngIf="!getStateTableIsUsing()" pButton type="button" icon="pi pi-times"
                         class="p-button-danger">Hủy
                         bàn</button> -->
@@ -200,4 +198,29 @@
     </div>
 </div>
 <p-toast></p-toast>
-<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+<p-confirmDialog #confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+
+<p-dialog header="Xác nhận" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false"
+    [resizable]="false">
+    <div class="flex align-items-center">
+        <i class="pi pi-info-circle"></i>
+        <div class="mr-2"></div>
+        <p>
+
+            Bạn có chắc chắn khách muốn thanh toán không?
+        </p>
+    </div>
+    <span class="p-float-label mt-3">
+        <textarea id="float-input" rows="5" cols="30" pInputTextarea [(ngModel)]="orderedTableOfUser.note" rows="2"
+            cols="30" pInputTextarea style="width: 100%;"></textarea>
+        <label for="float-input">Ghi chú</label>
+    </span>
+    <div class="flex mt-2" style="float: right;">
+        <button pButton icon="pi pi-check" (click)="pay('paid')">Trả hết</button>
+        <div class="mx-1"></div>
+        <button pButton icon="pi pi-check" (click)="pay('unpaid')">Trả sau</button>
+        <div class="mx-1"></div>
+        <button pButton icon="pi pi-times" (click)="this.visible = false" class="p-button-danger">Huỷ</button>
+    </div>
+
+</p-dialog>
