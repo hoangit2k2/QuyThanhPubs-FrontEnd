@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmEventType, ConfirmationService, MenuItem, MessageService, PrimeNGConfig, SelectItem } from 'primeng/api';
 import { Category } from 'src/app/models/category.model';
@@ -36,7 +36,9 @@ export class EditTableComponent implements OnInit {
   sortKey!: string
   value4: number = 50;
   products : Product[] = [];
+  visible: boolean = false;
   isSaving: boolean = false;
+  isSavingCheckout: boolean = false;
   orderedProducts: ItemProduct[] =[];
   tableProductUpdate: TableProductUpdate[] = []
   orderedTableOfUser: OrderedTableOfUser = {
@@ -49,7 +51,9 @@ export class EditTableComponent implements OnInit {
   
   };
   menuCheckout!: MenuItem[];
-  
+  @ViewChild('confirmDialog', { static: true }) myParagraph!: ElementRef;
+
+
   /**
    * @constructor
    * @param route 
@@ -104,6 +108,7 @@ export class EditTableComponent implements OnInit {
      })
     this.primengConfig.ripple = true;
     this.checkDelivered();
+    console.log(this.myParagraph.nativeElement)
     }
     initDataOrderedTableOfUser(){
       this.tableService.getProductOfTable(this.idTable).subscribe((response)=>{
@@ -271,18 +276,21 @@ export class EditTableComponent implements OnInit {
       })
    }
    saveTable(){
+    this.isSaving = true;
     this.tableProductUpdate = []
     this.orderedTableOfUser.tableProducts.forEach(p => {
       this.tableProductUpdate = [...this.tableProductUpdate , {tableProductId : p.id, quantity: p.quantity, status: p.status, product_id: p.product.id}];
     })
     this.tableService.updateProductOfTable(this.idTable, this.tableProductUpdate).subscribe(data=> {
       this.alertService.showAlert('success', "Thông báo", "Cập nhật bàn thành công!");
+      this.isSaving = false;
       setTimeout(()=> {
         this.router.navigate(['/table']);
       }, 1000)
      
     }, err => {
       this.alertService.showAlert('error', "Thông báo", "Cập nhật bàn thất bại!");
+      this.isSaving = false;
     })
   
    }
@@ -293,31 +301,46 @@ export class EditTableComponent implements OnInit {
      return this.orderedTableOfUser.tableProducts.some((product=> product.status === DeliveryProductSatus.NOT_YET_DELIVERED));
    }
    checkOut(){
-    const data = {
-      name : this.orderedTableOfUser.name,
-      note : this.orderedTableOfUser.note,
-      status: TableStatus.PAID
-    }
-    this.confirmationService.confirm({
-      message: 'Bạn có chắc chắn khách muốn thanh toán không?',
-      header: 'Xác nhận',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-          
-          this.tableService.updateSatusTable(this.idTable as string,data ).subscribe(data=> {
-            this.alertService.showAlert('success', 'Thông báo', 'Thanh toán cho khách hàng thành công!');
-            setTimeout(() => {
-              this.router.navigate(['table'])
-            },)
-          }, err => {
-            this.alertService.showAlert('error', 'Thông báo', 'Thanh toán cho khách hàng thất bại!');
-            
-          })
-
-      },
-      reject: () => {
-        
-      }
-  });
+    this.isSavingCheckout = true;
+    this.orderedTableOfUser.tableProducts.forEach(p => {
+      this.tableProductUpdate = [...this.tableProductUpdate , {tableProductId : p.id, quantity: p.quantity, status: p.status, product_id: p.product.id}];
+    })
+    this.tableService.updateProductOfTable(this.idTable, this.tableProductUpdate).subscribe(data=> {
+      this.isSavingCheckout = false;
+      this.visible = true;
+     
+    }, err => {
+      this.visible = false;
+      this.isSavingCheckout = false;
+    })
    }
+   pay(status: string){
+    let data;
+    if (status === TableStatus.PAID){
+       data = {
+        name : this.orderedTableOfUser.name,
+        note : this.orderedTableOfUser.note,
+        status: TableStatus.PAID
+      }
+    }
+    if (status === TableStatus.UNPAID){
+      data = {
+        name : this.orderedTableOfUser.name,
+        note : this.orderedTableOfUser.note,
+        status: TableStatus.UNPAID
+      }
+    }
+    if (data){
+      this.tableService.updateSatusTable(this.idTable as string,data ).subscribe(data=> {
+        this.alertService.showAlert('success', 'Thông báo', 'Thanh toán cho khách hàng thành công!');
+        setTimeout(() => {
+          this.router.navigate(['table'])
+        },1000)
+      }, err => {
+        this.alertService.showAlert('error', 'Thông báo', 'Thanh toán cho khách hàng thất bại!');
+        
+      })
+    }
+   }
+   
 }
