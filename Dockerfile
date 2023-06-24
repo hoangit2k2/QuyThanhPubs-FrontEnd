@@ -1,18 +1,13 @@
-FROM node:16-alpine as builder
-# Set the working directory to /app inside the container
+FROM node:16-alpine AS build
 WORKDIR /app
-# Copy app files
-COPY . .
-# Install dependencies (npm ci makes sure the exact versions in the lockfile gets installed)
-RUN npm ci 
-# Build the app
-RUN npm run build
 
-# Bundle static assets with nginx
+COPY . .
+RUN npm install
+RUN npm run build
+# Serve Application using Nginx Server
 FROM nginx:1.21.0-alpine as production
 ENV NODE_ENV production
-# Copy built assets from `builder` image
-COPY --from=builder /app/build /usr/share/nginx/html
+COPY --from=build /app/dist/quythanhpubs-frontend/ /usr/share/nginx/html
 # Add your nginx.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Expose port

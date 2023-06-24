@@ -36,17 +36,21 @@
 
 
         <div class="products-for-order">
-            <div *ngIf="isLoading" class=" mt-3 flex justify-content-center align-items-center">
+            <div *ngIf="isLoading" style="width: 100%;" class=" mt-3 flex justify-content-center align-items-center">
                 <p-progressSpinner></p-progressSpinner>
             </div>
-            <div *ngIf="!isLoading && isNull" class=" mt-5 flex justify-content-center align-items-center">
+            <div *ngIf="!isLoading && isNull" style="width: 100%;"
+                class=" mt-5 flex justify-content-center align-items-center">
                 <img src="assets/empty-folder.png" style="width: 100px; height: 100px;" alt="">
             </div>
 
             <p-dataView #dv emptyMessage="" [value]="products" [layout]="layout" *ngIf="!isLoading && !isNull">
                 <ng-template let-product pTemplate="gridItem">
-                    <div class="col-12 sm:col-6 lg:col-6 xl:col-4 ">
+
+                    <div class="col-12 sm:col-6 lg:col-6 xl:col-4  ">
+
                         <div class="card-product">
+
                             <div class=" border-1 surface-border surface-card border-round">
                                 <div class="flex flex-column align-items-center gap-4 py-5">
                                     <img style="height: 83px; width: 148px;" class="w-9 shadow-2 border-round"
@@ -178,8 +182,10 @@
                         <i *ngIf="isSaving" class="pi pi-spin pi-spinner mr-1"></i>
                         <i *ngIf="!isSaving" class="pi pi-save mr-1"></i>
                         Lưu bàn</button>
-                    <button [disabled]="orderedProducts.length === 0 ||  orderedTableOfUser.name === ''" pButton
-                        type="button" icon="pi pi-check" class="p-button-success">Thanh
+                    <button
+                        [disabled]="this.checkDelivered() || orderedTableOfUser.tableProducts.length === 0 || orderedTableOfUser.name === ''"
+                        pButton type="button" icon="pi pi-check" class="p-button-success"
+                        (click)="this.checkOut()">Thanh
                         toán</button>
                     <!-- <button *ngIf="!getStateTableIsUsing()" pButton type="button" icon="pi pi-times"
                         class="p-button-danger">Hủy
@@ -194,4 +200,4 @@
     </div>
 </div>
 <p-toast></p-toast>
-<p-confirmPopup></p-confirmPopup>
+<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>

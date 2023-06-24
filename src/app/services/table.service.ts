@@ -36,22 +36,13 @@ export class TableService {
     return this.http.get<OrderedTableOfUser>(environment.apiBase+`admin/table/${idTable}`);
   }
   updateProductOfTable(idTable: number|string|null, data: TableProductUpdate[]){
-    return this.http.put(environment.apiBase + `admin/tableProduct`, data).pipe( map( data => data), catchError(err=>   
-      {
-        console.log(err)
-        return err;
-      }));
+    return this.http.put(environment.apiBase + `admin/updateTable/${idTable}`, data);
   
   }
-  removeOrderedProduct(orderedProductId: any){
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-      body:  [
-        {idTableProduct: orderedProductId}
-      ],
-    };
-    return this.http.delete(environment.apiBase+`admin/tableProduct`, options);
+  /**
+   * change status of table
+   */
+  updateSatusTable(idTable: number|string, data: unknown){
+    return this.http.put(environment.apiBase + `admin/table/${idTable}`, data);
   }
 }
