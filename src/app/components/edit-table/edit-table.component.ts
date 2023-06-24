@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ConfirmationService, MenuItem, MessageService, PrimeNGConfig, SelectItem } from 'primeng/api';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ConfirmEventType, ConfirmationService, MenuItem, MessageService, PrimeNGConfig, SelectItem } from 'primeng/api';
 import { Category } from 'src/app/models/category.model';
 import { DeliveryProductSatus } from 'src/app/models/delivery-product-status.enum';
 import { ItemProduct } from 'src/app/models/item.model';
@@ -67,7 +67,9 @@ export class EditTableComponent implements OnInit {
     private storeService: StoreService,
     private tableService: TableService,
     private alertService: AlertService,
-    private location: Location) { }
+    private location: Location,
+    private router: Router,
+    private confirmationService: ConfirmationService) { }
 
     /**
      * @override ngOnInit
@@ -101,6 +103,7 @@ export class EditTableComponent implements OnInit {
       this.showProducts()
      })
     this.primengConfig.ripple = true;
+    this.checkDelivered();
     }
     initDataOrderedTableOfUser(){
       this.tableService.getProductOfTable(this.idTable).subscribe((response)=>{
@@ -184,12 +187,6 @@ export class EditTableComponent implements OnInit {
         this.orderedTableOfUser.tableProducts.splice(index, 1);
         
       }
-      if (orderedProduct.id !== null){
-        this.tableService.removeOrderedProduct(orderedProduct.id).subscribe(data=>{
-          this.alertService.showAlert('success', 'Thông báo', 'Sản phẩm đã xoá thành công')
-        })
-      }
-    
       this.tempTotal =  this.orderedTableOfUser.tableProducts.reduce((previousValue, currentValue) => previousValue + currentValue.product.price * currentValue.quantity , 0 )
       console.log( this.orderedTableOfUser.tableProducts)
     }
@@ -276,12 +273,51 @@ export class EditTableComponent implements OnInit {
    saveTable(){
     this.tableProductUpdate = []
     this.orderedTableOfUser.tableProducts.forEach(p => {
-      this.tableProductUpdate = [...this.tableProductUpdate , {tableProductId : p.id, quantity: p.quantity, status: p.status, productId: p.product.id}];
+      this.tableProductUpdate = [...this.tableProductUpdate , {tableProductId : p.id, quantity: p.quantity, status: p.status, product_id: p.product.id}];
     })
     this.tableService.updateProductOfTable(this.idTable, this.tableProductUpdate).subscribe(data=> {
-      console.log(data)
+      this.alertService.showAlert('success', "Thông báo", "Cập nhật bàn thành công!");
+      setTimeout(()=> {
+        this.router.navigate(['/table']);
+      }, 1000)
+     
+    }, err => {
+      this.alertService.showAlert('error', "Thông báo", "Cập nhật bàn thất bại!");
     })
   
    }
+   /**
+    * check whole products is deliveried
+    */
+   public checkDelivered(){
+     return this.orderedTableOfUser.tableProducts.some((product=> product.status === DeliveryProductSatus.NOT_YET_DELIVERED));
+   }
+   checkOut(){
+    const data = {
+      name : this.orderedTableOfUser.name,
+      note : this.orderedTableOfUser.note,
+      status: TableStatus.PAID
+    }
+    this.confirmationService.confirm({
+      message: 'Bạn có chắc chắn khách muốn thanh toán không?',
+      header: 'Xác nhận',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+          
+          this.tableService.updateSatusTable(this.idTable as string,data ).subscribe(data=> {
+            this.alertService.showAlert('success', 'Thông báo', 'Thanh toán cho khách hàng thành công!');
+            setTimeout(() => {
+              this.router.navigate(['table'])
+            },)
+          }, err => {
+            this.alertService.showAlert('error', 'Thông báo', 'Thanh toán cho khách hàng thất bại!');
+            
+          })
 
+      },
+      reject: () => {
+        
+      }
+  });
+   }
 }
