@@ -1,3 +1,5 @@
+import { ItemProduct } from "./item.model";
+
 export interface Table{
     id: number;
     name: string;
@@ -5,4 +7,5 @@ export interface Table{
     status: string;
     createAt: string;
     updateAt: string;
+    tableProducts : ItemProduct[]
 }

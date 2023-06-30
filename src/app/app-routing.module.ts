@@ -11,6 +11,7 @@ import { AuthComponent } from './components/auth/auth.component';
 import { MyDataResolver } from './utils/resolve.util';
 import { AuthGuard } from './guard.guard';
 import { AuthenticationGuard } from './authentication.guard';
+import { UserGuideComponent } from './components/user-guide/user-guide.component';
 
 const routes: Routes = [
   {
@@ -41,6 +42,11 @@ const routes: Routes = [
   {
     path:'create-table',
     component: CreateTableComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path:'user-guide',
+    component: UserGuideComponent,
     canActivate: [AuthGuard]
   },
   {

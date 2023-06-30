@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MenuItem, MessageService, PrimeNGConfig, SelectItem } from 'primeng/api';
 import { Category } from 'src/app/models/category.model';
 import { DeliveryProductSatus } from 'src/app/models/delivery-product-status.enum';
@@ -13,6 +13,8 @@ import { TableService } from 'src/app/services/table.service';
 import { Location } from '@angular/common';
 import { OrderedTableOfUser } from 'src/app/models/table-ordered-user.model';
 import { Router } from '@angular/router';
+import MESSAGE from 'src/app/common/message.name';
+import KEYNAME from 'src/app/common/key.type';
 @Component({
   selector: 'app-create-table',
   templateUrl: './create-table.component.html',
@@ -38,9 +40,12 @@ export class CreateTableComponent implements OnInit {
     phone:'',
     user: '',
     orderedProducts:[],
-    note: ''
+    note: '',
+    isSaved: false
   };
   menuCheckout!: MenuItem[];
+  @ViewChild('btnSave', { static: true }) btnSave!: ElementRef;
+  @ViewChild('btnClear', { static: true }) btnClear!: ElementRef;
   orderedTableOfUser!: OrderedTableOfUser;
   constructor(private primengConfig: PrimeNGConfig, 
     private productService: ProductService, 
@@ -69,10 +74,16 @@ export class CreateTableComponent implements OnInit {
     var data= this.storeService.getCart("orderedTable");
     console.log(data);
    if (data){
+    if (data.isSaved) {
+       this.cancelTable()
+    }
+    else{
       this.orderedTable = data;
-       this.orderedProducts = this.orderedTable.orderedProducts;
-       
-       this.getTempTotal();
+      this.orderedProducts = this.orderedTable.orderedProducts;
+      
+      this.getTempTotal();
+    }
+      
    }
    this.categoryService.getAllCategories().subscribe(data => {
     this.categories=data;
@@ -175,7 +186,8 @@ export class CreateTableComponent implements OnInit {
         name: '',
         phone:'',
         orderedProducts:[],
-        note: ''
+        note: '',
+        isSaved: false
       };
       this.orderedProducts = this.orderedTable.orderedProducts;
       this.isSaving = false;
@@ -194,7 +206,9 @@ export class CreateTableComponent implements OnInit {
     console.log(this.orderedTable)
     this.isSaving = true
     this.tableService.createTable(this.orderedTable).subscribe(data => {
-      this.alertService.showAlert('success', 'Thông báo', 'Tạo bàn cho khách hàng thành công!')
+      this.orderedTable.isSaved = true;
+      this.saveOrderTableToStore();
+      this.alertService.showAlert(MESSAGE.SUCCESS, MESSAGE.TITLE, 'Tạo bàn cho khách hàng thành công!')
       setTimeout(() => {
         this.router.navigate(['table',data.id])
       },1000)
@@ -246,4 +260,14 @@ export class CreateTableComponent implements OnInit {
 
     }, 500);
   }
+    @HostListener(KEYNAME.CTRLS, ['$event'])
+    onSave(event: KeyboardEvent): void {
+     if (this.btnSave.nativeElement.disabled === false) {
+        this.saveTable()
+      }
+    }
+    @HostListener(KEYNAME.CTRLX, ['$event'])
+    onClear(event: KeyboardEvent): void {
+     this.cancelTable()
+    }
 }

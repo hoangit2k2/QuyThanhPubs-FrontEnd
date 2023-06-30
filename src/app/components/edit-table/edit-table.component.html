@@ -1,11 +1,11 @@
 <div class="container-order flex" style="height: 100%;">
     <div class="order--category" style="flex: 15;">
-        <p-toolbar>
+        <!-- <p-toolbar>
             <div class="p-toolbar-group-left">
                 <button pButton (click)="back()" icon="pi pi-arrow-left"></button>
             </div>
 
-        </p-toolbar>
+        </p-toolbar> -->
         <p-menu #menu [model]="items"></p-menu>
     </div>
     <div class="order--product" style="flex: 55;">
@@ -61,7 +61,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <span class="card-product-title border-round">{{product.price|currency: 'VND'}}</span>
+                            <span class="card-product-title border-round">{{product.price|vndFormat}}</span>
                             <div class="card-product-button-add">
                                 <p-button icon="pi pi-plus" styleClass="p-button-rounded p-button-secondary"
                                     (onClick)="addProductCart(product)"></p-button>
@@ -79,7 +79,7 @@
         <p-panel header="Cập nhật thông tin bàn" [toggleable]="true">
             <ng-template pTemplate="icons">
                 <button pButton class="p-panel-header-icon p-link">
-                    <span class="pi pi-sync"></span>
+                    <span class="pi pi-trash"></span>
                 </button>
             </ng-template>
             <div class="grid p-fluid">
@@ -118,16 +118,15 @@
                                             class="flex flex-column align-items-center sm:align-items-start">
                                             <h4 style="font-weight: 500; margin: 5px 0px ;">{{
                                                 orderedProduct.product.name}}
-                                                <p-avatar *ngIf="orderedProduct.status === 'delivered'"
+                                                <!-- <p-avatar *ngIf="orderedProduct.status === 'delivered'"
                                                     icon="pi pi-check" styleClass="mx-1 green-500"
                                                     [style]="{'background-color': 'green', 'color': '#ffffff'}"
-                                                    shape="circle"></p-avatar>
+                                                    shape="circle"></p-avatar> -->
 
                                             </h4>
                                             <div class="flex align-items-center gap-3">
                                                 <span class="flex align-items-center gap-2">
-                                                    <span class="">{{orderedProduct.product.price | currency:
-                                                        'VND'}}</span>
+                                                    <span class="">{{orderedProduct.product.price | vndFormat}}</span>
                                                 </span>
 
 
@@ -149,12 +148,12 @@
 
                                             <div class="mx-1"></div>
                                             <button pButton [disabled]="orderedProduct.status === 'delivered'"
-                                                icon="pi pi-trash"
+                                                *ngIf="orderedProduct.status !== 'delivered'" icon="pi pi-trash"
                                                 class="p-button-rounded p-button-danger p-button-text"
                                                 (click)="deleteOrderedProduct(orderedProduct)"></button>
                                             <div class="mx-1"></div>
                                             <button pButton [disabled]="orderedProduct.status === 'delivered'"
-                                                icon="pi pi-check"
+                                                *ngIf="orderedProduct.status !== 'delivered'" icon="pi pi-check"
                                                 class="p-button-rounded p-button-primary p-button-text"
                                                 (click)="changeStatusOfProduct(orderedProduct)"></button>
                                         </div>
@@ -174,12 +173,13 @@
                 <p-divider align="center">
                 </p-divider>
                 <div class="flex justify-content-between align-items-center">
-                    <button [disabled]="orderedTableOfUser.tableProducts.length === 0 || orderedTableOfUser.name === ''"
+                    <button #btnSave
+                        [disabled]="orderedTableOfUser.tableProducts.length === 0 || orderedTableOfUser.name === ''"
                         pButton type="button" class="p-button-primary" (click)="saveTable()">
                         <i *ngIf="isSaving" class="pi pi-spin pi-spinner mr-1"></i>
                         <i *ngIf="!isSaving" class="pi pi-save mr-1"></i>
                         Lưu bàn</button>
-                    <button
+                    <button #btnPay
                         [disabled]="this.checkDelivered() || orderedTableOfUser.tableProducts.length === 0 || orderedTableOfUser.name === ''"
                         pButton type="button" class="p-button-success" (click)="this.checkOut()">
                         <i *ngIf="isSavingCheckout" class="pi pi-spin pi-spinner mr-1"></i>
@@ -218,7 +218,7 @@
     <div class="flex mt-2" style="float: right;">
         <button pButton icon="pi pi-check" (click)="pay('paid')">Trả hết</button>
         <div class="mx-1"></div>
-        <button pButton icon="pi pi-check" (click)="pay('unpaid')">Trả sau</button>
+        <button pButton icon="pi pi-chart-pie" (click)="pay('unpaid')" class="p-button-warning">Trả sau</button>
         <div class="mx-1"></div>
         <button pButton icon="pi pi-times" (click)="this.visible = false" class="p-button-danger">Huỷ</button>
     </div>
