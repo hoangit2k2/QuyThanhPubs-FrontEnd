@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmEventType, ConfirmationService, MenuItem, MessageService, PrimeNGConfig, SelectItem } from 'primeng/api';
 import { Category } from 'src/app/models/category.model';
@@ -17,6 +17,8 @@ import { TableStatus } from 'src/app/models/table-status.model';
 import { NotFoundComponent } from '../not-found/not-found.component';
 import { map } from 'rxjs';
 import { TableProductUpdate } from 'src/app/models/table-product-update.model';
+import MESSAGE from 'src/app/common/message.name';
+import KEYNAME from 'src/app/common/key.type';
 @Component({
   selector: 'app-edit-table',
   templateUrl: './edit-table.component.html',
@@ -52,7 +54,8 @@ export class EditTableComponent implements OnInit {
   };
   menuCheckout!: MenuItem[];
   @ViewChild('confirmDialog', { static: true }) myParagraph!: ElementRef;
-
+  @ViewChild('btnSave', { static: true }) btnSave!: ElementRef;
+  @ViewChild('btnPay', { static: true }) btnPay!: ElementRef;
 
   /**
    * @constructor
@@ -282,14 +285,12 @@ export class EditTableComponent implements OnInit {
       this.tableProductUpdate = [...this.tableProductUpdate , {tableProductId : p.id, quantity: p.quantity, status: p.status, product_id: p.product.id}];
     })
     this.tableService.updateProductOfTable(this.idTable, this.tableProductUpdate).subscribe(data=> {
-      this.alertService.showAlert('success', "Thông báo", "Cập nhật bàn thành công!");
+      this.alertService.showAlert(MESSAGE.SUCCESS, MESSAGE.TITLE, "Cập nhật bàn thành công!");
       this.isSaving = false;
-      setTimeout(()=> {
-        this.router.navigate(['/table']);
-      }, 1000)
+    
      
     }, err => {
-      this.alertService.showAlert('error', "Thông báo", "Cập nhật bàn thất bại!");
+      this.alertService.showAlert(MESSAGE.ERROR, MESSAGE.TITLE, "Cập nhật bàn thất bại!");
       this.isSaving = false;
     })
   
@@ -332,15 +333,27 @@ export class EditTableComponent implements OnInit {
     }
     if (data){
       this.tableService.updateSatusTable(this.idTable as string,data ).subscribe(data=> {
-        this.alertService.showAlert('success', 'Thông báo', 'Thanh toán cho khách hàng thành công!');
+        this.alertService.showAlert(MESSAGE.SUCCESS, MESSAGE.TITLE, 'Thanh toán cho khách hàng thành công!');
         setTimeout(() => {
           this.router.navigate(['table'])
         },1000)
       }, err => {
-        this.alertService.showAlert('error', 'Thông báo', 'Thanh toán cho khách hàng thất bại!');
+        this.alertService.showAlert(MESSAGE.ERROR, MESSAGE.TITLE, 'Thanh toán cho khách hàng thất bại!');
         
       })
     }
    }
+   @HostListener(KEYNAME.CTRLS, ['$event'])
+    onSave(event: KeyboardEvent): void {
+     if (this.btnSave.nativeElement.disabled === false) {
+        this.saveTable()
+      }
+    }
+    @HostListener(KEYNAME.CTRLT, ['$event'])
+    onClear(event: KeyboardEvent): void {
+      if (this.btnPay.nativeElement.disabled === false) {
+        this.checkOut()
+      }
    
+    }
 }

@@ -254,3 +254,6 @@
 :host ::ng-deep  .p-dialog-header{
   padding-bottom: 2px;
 }
+:host :ng-deep .p-submenu-header{
+  margin-bottom: 10px;
+}

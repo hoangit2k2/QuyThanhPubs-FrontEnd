@@ -49,6 +49,8 @@ import { MyDataResolver } from './utils/resolve.util';
 import { JwtModule } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { VndFormatPipe } from './pipe/vnd-format.pipe';
+import { UserGuideComponent } from './components/user-guide/user-guide.component';
 export function tokenGetter() {
   return localStorage.getItem('access_token');
 }
@@ -62,7 +64,9 @@ export function tokenGetter() {
     CreateTableComponent,
     EditTableComponent,
     NotFoundComponent,
-    AuthComponent
+    AuthComponent,
+    VndFormatPipe,
+    UserGuideComponent
   ],
   imports: [
     BrowserModule,

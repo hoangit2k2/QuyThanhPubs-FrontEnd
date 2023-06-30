@@ -6,4 +6,5 @@ export interface OrderedTable{
     user?: string;
     orderedProducts : ItemProduct[] ;
     note: string;
+    isSaved ?: boolean;
 }

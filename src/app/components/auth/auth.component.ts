@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import MESSAGE from 'src/app/common/message.name';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { StoreService } from 'src/app/services/store.service';
@@ -35,7 +36,7 @@ export class AuthComponent implements OnInit {
     console.log({username, password} )
     this.isLoading = true;
     this.authService.login(username, password).subscribe((response) =>{
-    this.alertService.showAlert('success', '', 'Đăng nhập thành công!')
+    this.alertService.showAlert(MESSAGE.SUCCESS, '', 'Đăng nhập thành công!')
     
     this.isLoading = false;
     setTimeout(() =>{
@@ -45,7 +46,7 @@ export class AuthComponent implements OnInit {
     },
     (err)=>{
       this.isLoading = false;
-      this.alertService.showAlert('error', 'Đăng nhập thất bại!', 'Tên tài khoản hoặc mật khẩu không đúng!')
+      this.alertService.showAlert(MESSAGE.ERROR, 'Đăng nhập thất bại!', 'Tên tài khoản hoặc mật khẩu không đúng!')
       console.log(err)
     })
   }
