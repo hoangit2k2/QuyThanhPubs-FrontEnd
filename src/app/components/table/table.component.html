@@ -29,10 +29,12 @@
                         [routerLink]="['/table/', table.id]">
                         <div class="py-4 border-1 surface-border surface-card border-round">
                             <div class="flex flex-column align-items-center gap-3 ">
-                                <p-tag icon="pi pi-check" severity="success" *ngIf=" table.id % 2 != 0"
+                                <p-tag icon="pi pi-check" severity="success"
+                                    *ngIf="countProductsNotDelivered(table.id).isDeliveredAll"
                                     value="Đã giao hết món"></p-tag>
-                                <p-tag icon="pi pi-exclamation-triangle" *ngIf=" table.id % 2 == 0" severity="warning"
-                                    value="Còn 3 món"></p-tag>
+                                <p-tag icon="pi pi-exclamation-triangle"
+                                    *ngIf="!countProductsNotDelivered(table.id).isDeliveredAll" severity="warning"
+                                    value="Còn {{countProductsNotDelivered(table.id).quantity}} món"></p-tag>
                                 <img class="w-9 shadow-2 border-round" src="assets/bannertable.jpg" />
                                 <div class="flex align-items-center justify-content-center">
                                     <img style="width: 23px; height: 23px;" src="assets/table.png" alt="">
