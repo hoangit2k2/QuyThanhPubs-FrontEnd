@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { MessageService, PrimeNGConfig, SelectItem } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import KEYNAME from 'src/app/common/key.type';
+import { DeliveryProductSatus } from 'src/app/models/delivery-product-status.enum';
 import { Product } from 'src/app/models/product.model';
 import { Table } from 'src/app/models/table.model';
 import { TableService } from 'src/app/services/table.service';
@@ -27,7 +28,6 @@ export class TableComponent implements OnInit {
     this.tableService.getAllTables().subscribe(data=> {
       this.tables = data;
       this.isLoading = false;
-      console.log(this.tables)
     })
 
   this.primengConfig.ripple = true;
@@ -47,5 +47,26 @@ export class TableComponent implements OnInit {
     @HostListener(KEYNAME.CTRLN, ['$event'])
     onCreate(event: KeyboardEvent): void {
       this.router.navigate(['/create-table'])
+    }
+    countProductsNotDelivered(id : number) : any {
+      const data = {
+        isDeliveredAll :  true,
+        quantity: 0
+      }
+      const table = this.tables.find(t => t.id === id);
+      if (table) {
+        const productsNotDelivered = table.tableProducts.reduce((acc, product)=>{
+          if (product.status === DeliveryProductSatus.NOT_YET_DELIVERED){
+            acc+=1;
+            return acc;
+          }
+          return acc;
+        }, 0);
+        if (productsNotDelivered>0){
+          data.quantity = productsNotDelivered;
+          data.isDeliveredAll = false;
+        }
+      }
+      return data;
     }
 }
