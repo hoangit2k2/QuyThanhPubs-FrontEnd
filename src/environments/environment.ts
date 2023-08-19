@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiBase: 'https://quythanh.onrender.com/'
+  apiBase: 'http://localhost:3000/'
 };
 
 /*

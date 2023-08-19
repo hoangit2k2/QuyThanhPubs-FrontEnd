@@ -25,15 +25,15 @@ export class CreateTableComponent implements OnInit {
   isNull!: boolean;
   layout = 'grid'
   items!: MenuItem[];
-  tempTotal: number = 0;
+  tempTotal = 0;
   categories: Category[] = []
   sortOptions !: SelectItem[];
   sortField!: string;
   sortOrder!: number;
   sortKey!: string
-  value4: number = 50;
+  value4 = 50;
   products : Product[] = [];
-  isSaving: boolean = false;
+  isSaving = false;
   orderedProducts: ItemProduct[] =[];
   orderedTable: OrderedTable = {
     name: '',
@@ -71,7 +71,7 @@ export class CreateTableComponent implements OnInit {
         console.log()
       }
   }]
-    var data= this.storeService.getCart("orderedTable");
+    const data= this.storeService.getCart("orderedTable");
     console.log(data);
    if (data){
     if (data.isSaved) {
@@ -87,7 +87,7 @@ export class CreateTableComponent implements OnInit {
    }
    this.categoryService.getAllCategories().subscribe(data => {
     this.categories=data;
-    var subitems = [{
+    let subitems = [{
       label : "Tất cả",
       command : () =>{
         this.showProducts()
@@ -114,14 +114,14 @@ export class CreateTableComponent implements OnInit {
   
   }
   addProductCart(product: Product){
-    var check =  this.orderedProducts.some(p => p.product.id === product.id);
+    const check =  this.orderedProducts.some(p => p.product.id === product.id);
     if (!check){
       this.orderedProducts = [...this.orderedProducts, {product, quantity: 1, status: DeliveryProductSatus.NOT_YET_DELIVERED}]
     }
     else{
       this.orderedProducts = this.orderedProducts.map(p => {
         if (product.id === p.product.id){
-            var quantity = p.quantity;
+            const quantity = p.quantity;
             return {...p, quantity: quantity+1}
         }
         else{
@@ -166,7 +166,7 @@ export class CreateTableComponent implements OnInit {
   }
 
   deleteOrderedProduct(product: Product){
-    let index = this.orderedProducts.findIndex((p) => p.product.id === product.id);
+    const index = this.orderedProducts.findIndex((p) => p.product.id === product.id);
    if (index !== -1) {
       this.orderedProducts.splice(index, 1);
       

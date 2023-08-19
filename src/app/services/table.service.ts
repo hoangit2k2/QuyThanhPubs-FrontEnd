@@ -35,7 +35,7 @@ export class TableService {
   getProductOfTable(idTable: number|string | null){
     return this.http.get<OrderedTableOfUser>(environment.apiBase+`admin/table/${idTable}`);
   }
-  updateProductOfTable(idTable: number|string|null, data: TableProductUpdate[]){
+  updateProductOfTable(idTable: number|string|null, data: TableProductUpdate){
     return this.http.put(environment.apiBase + `admin/updateTable/${idTable}`, data);
   
   }

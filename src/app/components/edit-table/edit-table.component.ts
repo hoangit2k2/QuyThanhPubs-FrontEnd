@@ -16,7 +16,7 @@ import { OrderedTableOfUser } from 'src/app/models/table-ordered-user.model';
 import { TableStatus } from 'src/app/models/table-status.model';
 import { NotFoundComponent } from '../not-found/not-found.component';
 import { map } from 'rxjs';
-import { TableProductUpdate } from 'src/app/models/table-product-update.model';
+import { ProductUpdate, TableProductUpdate } from 'src/app/models/table-product-update.model';
 import MESSAGE from 'src/app/common/message.name';
 import KEYNAME from 'src/app/common/key.type';
 @Component({
@@ -30,19 +30,20 @@ export class EditTableComponent implements OnInit {
   isNull!: boolean;
   layout = 'grid'
   items!: MenuItem[];
-  tempTotal: number = 0;
+  tempTotal = 0;
   categories: Category[] = []
   sortOptions !: SelectItem[];
   sortField!: string;
   sortOrder!: number;
   sortKey!: string
-  value4: number = 50;
+  value4 = 50;
   products : Product[] = [];
-  visible: boolean = false;
-  isSaving: boolean = false;
-  isSavingCheckout: boolean = false;
+  visible = false;
+  isSaving = false;
+  isSavingCheckout = false;
   orderedProducts: ItemProduct[] =[];
-  tableProductUpdate: TableProductUpdate[] = []
+  // tableProductUpdate: TableProductUpdate
+  productUpdate: ProductUpdate[] = []
   orderedTableOfUser: OrderedTableOfUser = {
     name: '',
     phone: '',
@@ -51,6 +52,11 @@ export class EditTableComponent implements OnInit {
     note: '',
     id: 0,
   
+  };
+  tableProductUpdate: TableProductUpdate = {
+    nameTable: '',
+    phone: '',
+    updateProductDto: [],  
   };
   menuCheckout!: MenuItem[];
   @ViewChild('confirmDialog', { static: true }) myParagraph!: ElementRef;
@@ -87,7 +93,7 @@ export class EditTableComponent implements OnInit {
       // categories sidebar
      this.categoryService.getAllCategories().subscribe(data => {
       this.categories=data;
-      var subitems = [{
+      let subitems = [{
         label : "Tất cả",
         command : () =>{
           this.showProducts()
@@ -280,9 +286,12 @@ export class EditTableComponent implements OnInit {
    }
    saveTable(){
     this.isSaving = true;
-    this.tableProductUpdate = []
+    this.tableProductUpdate;
+    this.productUpdate = []
+    this.tableProductUpdate.nameTable = this.orderedTableOfUser.name
+    this.tableProductUpdate.phone = this.orderedTableOfUser.phone
     this.orderedTableOfUser.tableProducts.forEach(p => {
-      this.tableProductUpdate = [...this.tableProductUpdate , {tableProductId : p.id, quantity: p.quantity, status: p.status, product_id: p.product.id}];
+      this.tableProductUpdate.updateProductDto = [...this.tableProductUpdate.updateProductDto , {tableProductId : p.id, quantity: p.quantity, status: p.status, product_id: p.product.id}];
     })
     this.tableService.updateProductOfTable(this.idTable, this.tableProductUpdate).subscribe(data=> {
       this.alertService.showAlert(MESSAGE.SUCCESS, MESSAGE.TITLE, "Cập nhật bàn thành công!");
@@ -303,8 +312,10 @@ export class EditTableComponent implements OnInit {
    }
    checkOut(){
     this.isSavingCheckout = true;
+    this.tableProductUpdate.nameTable = this.orderedTableOfUser.name
+    this.tableProductUpdate.phone = this.orderedTableOfUser.phone
     this.orderedTableOfUser.tableProducts.forEach(p => {
-      this.tableProductUpdate = [...this.tableProductUpdate , {tableProductId : p.id, quantity: p.quantity, status: p.status, product_id: p.product.id}];
+      this.tableProductUpdate.updateProductDto = [...this.tableProductUpdate.updateProductDto , {tableProductId : p.id, quantity: p.quantity, status: p.status, product_id: p.product.id}];
     })
     this.tableService.updateProductOfTable(this.idTable, this.tableProductUpdate).subscribe(data=> {
       this.isSavingCheckout = false;
